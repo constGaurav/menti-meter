@@ -1,6 +1,6 @@
 import { UserRepository } from "../repositories/UserRepository";
 import { AppError } from "../types/error";
-import { TUserSignUp } from "../types/user";
+import { TUserLogin, TUserSignUp } from "../types/user";
 
 export class UserService {
   private userRepository;
@@ -17,5 +17,16 @@ export class UserService {
     }
     const newUser = await this.userRepository.createUser(data);
     return newUser;
+  }
+
+  async login(data: TUserLogin) {
+    const user = await this.userRepository.findUserByEmail(data.email);
+    if (!user || user.password !== data.password) {
+      throw new AppError(401, "Invalid credentials", "INVALID_CREDENTIALS");
+    }
+
+    // TODO: Generate JWT token
+
+    return user;
   }
 }
