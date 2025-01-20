@@ -2,18 +2,19 @@ import { Request, Response } from "express";
 import { UserSignUpSchema } from "../types/user";
 import { AppError } from "../types/error";
 import { UserService } from "../services/UserService";
+import { asyncHandler } from "../utils/asyncHandler";
 
 const userService = new UserService();
 
 export class UserController {
-  async signUp(req: Request, res: Response) {
+  signUp = asyncHandler(async (req: Request, res: Response) => {
     const signUpRequest = UserSignUpSchema.safeParse(req.body);
     if (!signUpRequest.success) {
       throw new AppError(
         400,
         "Invalid data",
         "INVALID_REQUEST",
-        signUpRequest.data
+        signUpRequest.error.issues
       );
     }
 
@@ -27,5 +28,5 @@ export class UserController {
         email: user.email,
       },
     });
-  }
+  });
 }

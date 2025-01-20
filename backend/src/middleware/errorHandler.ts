@@ -10,13 +10,12 @@ export const errorHandler = (
   console.error(err);
 
   if (err instanceof AppError) {
-    res.status(err.status).json({
+    return res.status(err.status).json({
       status: err.status,
       message: err.message,
       code: err.code,
       data: err.data,
     });
-    next();
   }
 
   // Handle unknown errors
@@ -26,5 +25,4 @@ export const errorHandler = (
     code: "INTERNAL_ERROR",
     error: process.env.NODE_ENV === "development" ? err.message : undefined,
   });
-  next();
 };
