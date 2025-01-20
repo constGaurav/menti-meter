@@ -1,11 +1,12 @@
 import { Router } from "express";
+import { errorHandler } from "../../middleware/errorHandler";
+import userRouter from "./user";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.json({
-    message: "hello world",
-  });
-});
+router.use("/user", userRouter);
+
+// Error handling middleware should be 'LAST'
+router.use(errorHandler);
 
 export default router;
