@@ -68,4 +68,11 @@ export class UserController {
       },
     });
   });
+
+  logout = asyncHandler(async (req: Request, res: Response) => {
+    res.clearCookie(config.AUTH_COOKIE_KEY);
+    res.status(200).json({
+      message: "User logged out successfully",
+    });
+  });
 }
