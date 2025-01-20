@@ -1,12 +1,14 @@
+import dotenv from "dotenv";
 import express from "express";
+import router from "./routers";
+import { config } from "./config";
+dotenv.config();
 
 const app = express();
-const port = 3000;
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World Gaurav!");
-});
+app.use("/api", router);
 
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
+app.listen(config.port, () => {
+  console.log(`Server started at http://localhost:${config.port}`);
 });
