@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import { UserLoginSchema, UserSignUpSchema } from "../types/user";
-import { AppError } from "../types/error";
+import { config } from "../config";
 import { UserService } from "../services/UserService";
+import { AppError } from "../types/error";
+import { UserLoginSchema, UserSignUpSchema } from "../types/user";
 import { asyncHandler } from "../utils/asyncHandler";
+import { generateAccessToken } from "../utils/jwt";
 
 const userService = new UserService();
 
@@ -19,6 +21,13 @@ export class UserController {
     }
 
     const user = await userService.createUser(signUpRequest.data);
+
+    // Set JWT cookie
+    const token = generateAccessToken(user.id);
+    res.cookie(config.AUTH_COOKIE_KEY, token, {
+      httpOnly: true,
+      secure: false,
+    });
 
     res.status(201).json({
       message: "User created successfully",
@@ -42,6 +51,13 @@ export class UserController {
     }
 
     const user = await userService.login(loginRequest.data);
+
+    // Set JWT cookie
+    const token = generateAccessToken(user.id);
+    res.cookie(config.AUTH_COOKIE_KEY, token, {
+      httpOnly: true,
+      secure: false,
+    });
 
     res.status(200).json({
       message: "User logged in successfully",

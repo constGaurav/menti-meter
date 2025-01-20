@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { UserRepository } from "../repositories/UserRepository";
 import { AppError } from "../types/error";
 import { TUserLogin, TUserSignUp } from "../types/user";
@@ -15,17 +16,26 @@ export class UserService {
     if (existingUser?.id) {
       throw new AppError(400, "User already exists", "USER_ALREADY_EXISTS");
     }
-    const newUser = await this.userRepository.createUser(data);
+
+    const userData = {
+      ...data,
+      password: await bcrypt.hash(data.password, 10),
+    };
+
+    const newUser = await this.userRepository.createUser(userData);
     return newUser;
   }
 
   async login(data: TUserLogin) {
     const user = await this.userRepository.findUserByEmail(data.email);
-    if (!user || user.password !== data.password) {
+    if (!user) {
       throw new AppError(401, "Invalid credentials", "INVALID_CREDENTIALS");
     }
 
-    // TODO: Generate JWT token
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+    if (!isPasswordValid) {
+      throw new AppError(401, "Invalid credentials", "INVALID_CREDENTIALS");
+    }
 
     return user;
   }
