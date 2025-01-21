@@ -14,3 +14,15 @@ export const verifyAccessToken = (token: string) => {
     return null;
   }
 };
+
+export const getUserIdFromToken = (token: string) => {
+  try {
+    const decoded = jwt.decode(token) as {
+      userId: string;
+    };
+    return decoded.userId ?? null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
