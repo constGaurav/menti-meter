@@ -9,20 +9,10 @@ export const generateAccessToken = (userId: string) => {
 
 export const verifyAccessToken = (token: string) => {
   try {
-    return jwt.verify(token, config.ACCESS_TOKEN_SECRET);
-  } catch (error) {
-    return null;
-  }
-};
-
-export const getUserIdFromToken = (token: string) => {
-  try {
-    const decoded = jwt.decode(token) as {
+    return jwt.verify(token, config.ACCESS_TOKEN_SECRET) as {
       userId: string;
     };
-    return decoded.userId ?? null;
   } catch (error) {
-    console.log(error);
     return null;
   }
 };
