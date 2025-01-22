@@ -11,4 +11,14 @@ export class QuizService {
     const quiz = await this.quizRepository.createQuiz(data, userId);
     return quiz;
   }
+
+  async quizzesList(userId: string) {
+    const quiz = await this.quizRepository.quizzesList(userId);
+    return quiz;
+  }
+
+  async getQuizDetails(quizId: string) {
+    const quiz = await this.quizRepository.getQuizDetails(quizId);
+    return quiz;
+  }
 }

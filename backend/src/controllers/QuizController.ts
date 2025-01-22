@@ -63,4 +63,35 @@ export class QuizController {
       data: question,
     });
   });
+
+  quizzesList = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response) => {
+      // return all quizzes created by the user.
+      const userId = req?.userId;
+      if (!userId) {
+        throw new AppError(401, "Unauthorized", "UNAUTHORIZED");
+      }
+
+      const quizzes = await quizService.quizzesList(userId);
+      res.status(200).json({
+        message: "Quizzes list",
+        data: quizzes,
+      });
+    }
+  );
+
+  getQuizDetails = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response) => {
+      const quizId = req.params.quizId;
+      if (!quizId) {
+        throw new AppError(400, "Invalid quiz id", "INVALID_REQUEST");
+      }
+
+      const quiz = await quizService.getQuizDetails(quizId);
+      res.status(200).json({
+        message: "Quiz details",
+        data: quiz,
+      });
+    }
+  );
 }
