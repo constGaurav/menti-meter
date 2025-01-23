@@ -53,6 +53,8 @@ export class QuizController {
       throw new AppError(400, "Invalid quiz id", "INVALID_REQUEST");
     }
 
+    //TODO: Need to add validation for only quiz owner can add questions to the quiz.
+
     const question = await questionService.addQuestionToQuiz(
       quizId,
       questionRequest.data
